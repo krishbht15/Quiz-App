@@ -1,0 +1,83 @@
+type Teacher{
+    id:ID!
+    name:String
+    subject:String
+}
+
+input TeacherInput{
+    name:String!
+    subject:String!
+}
+
+type Student{
+    id:ID!
+    name:String
+    class:String
+}
+
+input StudentInput{
+    name:String!
+    class:String!
+}
+
+input QuizInput{
+    name:String!
+    description:String!
+    marksPerQuestion:Int!
+    teacherId:ID!
+}
+
+type Quiz{
+    id:ID
+    name:String
+    description:String
+    noOfQuestion:Int
+    totalMarks:Int
+    marksPerQuestion:Int
+    teacherId:ID
+}
+
+input QuestionInput{
+    title:String!
+    option:[OptionInput]!
+    answerIndex:Int!
+}
+type Question{
+    id:ID
+    title:String
+    option:[Option]
+}
+
+input OptionInput{
+    title:String!
+}
+
+type Option{
+    id:ID
+    title:String
+    questionId:ID
+}
+
+type Mutation{
+    createTeacher(teacher:TeacherInput!):GenericResponseMessage
+    createStudent(student:StudentInput!):GenericResponseMessage
+    createQuiz(quiz:QuizInput!):GenericResponseMessage
+    createQuestions(quizId:ID!,questions:[QuestionInput]):[GenericResponseMessage]
+    doQuiz(studentId:ID!, quizId:ID!):GenericResponseMessage
+    answerQuestion(studentQuizId:ID!, answerId:ID!, questionId:ID!):GenericResponseMessage
+    getResult(studentQuizId:ID!):GenericResponseMessage
+
+}
+
+type Query{
+    getTeachers(teacherId:ID):[Teacher]
+    getStudents(studentId:ID):[Student]
+    getQuizzes(quizId:ID):[Quiz]
+    getQuestions(quizId:ID,questionId:ID):[Question]
+}
+
+type GenericResponseMessage {
+    success: Boolean!
+    message: String!
+    data: String
+}

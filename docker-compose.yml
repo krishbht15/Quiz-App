@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  gromo_db:
+    restart: always
+    image: mysql:5.7
+    environment:
+      MYSQL_USER: gromo
+      MYSQL_PASSWORD: gromo
+      MYSQL_DATABASE: gromo_db
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+
+  gromo_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gromo-app
+    labels:
+      shipyard.route: '/graphql'
+    depends_on:
+      - gromo_db
+    volumes:
+      - "/usr/gromo/app/node_modules"
+      - ".:/usr/gromo/app"
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: local
+
+volumes:
+  db_data:
